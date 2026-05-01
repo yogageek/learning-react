@@ -1,0 +1,9 @@
+.App {
+  font-family: sans-serif;
+  text-align: center;
+}
+
+.error{
+  background-color: brown;
+  border: double 4px darkred;
+}
