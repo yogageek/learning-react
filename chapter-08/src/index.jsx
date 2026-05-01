@@ -14,7 +14,7 @@ createRoot(rootElement).render(
   <div style={{ display: "flex", width: "100%", minHeight: "100vh" }}>
     <div style={{ flex: 1 }}>
       <RenderProps />
-      <Storage />
+      {/* <Storage /> */}
       <App />
     </div>
 

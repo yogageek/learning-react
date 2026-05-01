@@ -4,10 +4,16 @@ import RepositoryReadme from "./RepositoryReadme";
 
 //useIterator 是自訂 Hook，用來取出儲存庫物件和name，連同 prev 和 next 兩個函式
 
-
-export default function RepoMenu({ repositories, onSelect, login }) {
-  const [{ name }, previous, next] = useIterator(repositories);
-  // onSelect就是外面傳進來的 onSelect={(repoName) => console.log(`${repoName} selected`)}  
+//repo切換的選單
+export default function RepoMenu({ repositories, onSelect, selected }) {
+  const [{ name }, previous, next] = useIterator(
+    repositories,
+    selected ? repositories.findIndex(repo => repo.name === selected) : null
+    // 如果已有選取的 repository，就找出它在清單中的索引；
+    // 否則回傳 null，避免畫面每次都預設從第一筆開始。
+  );
+  
+  //RepoMenu 切到了新的 repo，呼叫 onSelect(name)通知
   useEffect(() => {
     if (!name) return;
     onSelect(name);// name 改變時觸發 onSelect，通知外部目前選了哪個 repo
@@ -18,8 +24,6 @@ export default function RepoMenu({ repositories, onSelect, login }) {
       <button onClick={previous}>&lt;</button>
       <p>{name}</p>
       <button onClick={next}>&gt;</button>
-      {/* <p>{typeof login}</p> */}
-      <RepositoryReadme login={login} repo={name} />
     </>
   );
 }

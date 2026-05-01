@@ -5,8 +5,8 @@ import RepoMenu from "./RepoMenu";
 // UserRepositories 負責根據使用者名稱向 GitHub 發送請求，
 // 拿到儲存庫資料後，再把資料陣列傳給 RepoMenu 顯示出來。
 
-// 外面目前沒有傳 selectedRepo 進來。 
-export function UserRepositories({ login, selectedRepo, onSelect }) {
+//獲取repo的功能
+export function UserRepositories({ login, repo, onSelect }) {
   return (
     <Fetch1
       uri={`https://api.github.com/users/${login}/repos`}
@@ -15,7 +15,7 @@ export function UserRepositories({ login, selectedRepo, onSelect }) {
         <RepoMenu
           login={login}
           repositories={data}
-          selectedRepo={selectedRepo}
+          selected={repo}
           onSelect={onSelect}// 外面onSelect宣告一個函式傳進來，然後再繼續往下傳。 
         />
       )}
