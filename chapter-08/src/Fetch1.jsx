@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from "react";
 
+
+//自訂義Hook做個綜合，組合useState 和 useEffect。
+//只要loading ,data,error 狀態一有變化，就會重新渲染原件。
 function useFetch(uri) {
   const [data, setData] = useState();
   const [error, setError] = useState();
@@ -21,13 +24,15 @@ function useFetch(uri) {
   };
 }
 
-export default function Fetch1({
-  uri,
-  renderSuccess,
-  loadingFallback = <p>loading...</p>,
-  renderError = (error) => <pre>{JSON.stringify(error, null, 2)}</pre>,
-}) {
-  const { loading, data, error } = useFetch(uri);
+
+//fetch元件抽象資料處理與渲染的機制。處理等待資料時的顯示，成功時返回，錯誤時返回等等
+export default function Fetch1(
+  { uri,
+    renderSuccess,
+    loadingFallback = <p>loading...</p>,
+    renderError = (error) => <pre>{JSON.stringify(error, null, 2)}</pre>,
+  }) {
+  const { loading, data, error } = useFetch(uri); //打api,有拿到data的話,放進外面傳進來的renderSuccess裡,讓外面決定要怎麼顯示資料
   if (loading) return loadingFallback;
   if (error) return renderError(error);
   if (data) return renderSuccess({ data });

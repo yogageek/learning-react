@@ -1,7 +1,9 @@
-import React from "react";
+import React, { useState } from "react";
 import Fetch1 from "./Fetch1.jsx";
 import { UserRepositories } from "./UserRepositories";
+import SearchForm from "./SearchForm.jsx";
 
+// github元件透過login屬性接收一個用戶名稱做查詢目標構建請求的網址并交由fetch元件進行處理。 
 function GitHubUser({ login }) {
   return (
     <Fetch1
@@ -29,30 +31,13 @@ function UserDetails({ data }) {
 }
 
 export default function App() {
-  return <GitHubUser login="moonhighway" />;
+  const [login, setLogin] = useState("moonhighway");
+  // const [repo, setRepo] = useState("learning-react");
+
+  return (
+    <>
+      <SearchForm value={login} onSearch={setLogin} />
+      <GitHubUser login={login} />
+    </>
+  );
 }
-
-
-/*
-閱讀順序：
-
-index.jsx -> App.jsx -> Fetch.jsx -> hooks.js -> RepoMenu.jsx -> UserRepositories.jsx
-
-App.jsx -- 主結構
-
-兩個 component：
-
-GitHubUser 用 Fetch 去打 GitHub 用戶 API，資料回來後交給 UserDetails 渲染。
-
-UserDetails 顯示頭像、名字、地點，最後掛上 UserRepositories。
-
-整體資料流：
-
-App
-└── GitHubUser
-    └── Fetch（打用戶 API）
-        └── UserDetails（顯示用戶資料）
-            └── UserRepositories
-                └── Fetch（打 repo API）
-                    └── RepoMenu（切換 repo）
-*/
