@@ -1,3 +1,5 @@
+//受測系統 system under test = SUT
+
 export function timesTwo(a) {
   return a * 2;
 }
@@ -12,3 +14,5 @@ export function order(items) {
     total
   };
 }
+
+export const sum = (a, b) => a + b;

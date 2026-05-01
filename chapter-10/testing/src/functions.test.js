@@ -1,4 +1,6 @@
-import { timesTwo, order } from "./functions";
+//import 要測試的 js
+
+import { sum, timesTwo, order } from "./functions";
 
 test("Multiplies by two", () => {
   expect(timesTwo(4)).toBe(8);
@@ -34,3 +36,13 @@ test("Build an order object", () => {
   };
   expect(order(menuItems)).toEqual(result);
 });
+
+//建立一組測試集
+describe("functions", () => {
+  test("Multiplies by two", () => {
+    expect(timesTwo(4)).toBe(8);
+  });
+  test("Add two numbers", () => {
+    expect(sum(4, 2)).toBe(6);
+  });
+})
