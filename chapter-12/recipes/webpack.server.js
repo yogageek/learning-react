@@ -1,3 +1,5 @@
+//Webpack 或 Babel 將 server/index.js 與相關元件編譯成 Node.js 能直接執行的版本（生成 server-build/index.js）。
+
 const path = require("path");
 const nodeExternals = require("webpack-node-externals");
 
