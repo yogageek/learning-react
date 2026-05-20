@@ -1,5 +1,5 @@
 import React from "react";
-import { useRoutes } from "react-router-dom";
+import { useRoutes, Navigate } from "react-router-dom";
 import {
   Home,
   About,
@@ -12,9 +12,17 @@ import {
   Location
 } from "./pages";
 
+/**
+ * App 組件 - 應用程式的主進入點與路由配置中心
+ */
 function App() {
+  /**
+   * useRoutes 鉤子 (Hook)：
+   * 這是 React Router v6 提供的一種「宣告式」路由配置方式。
+   */
   let element = useRoutes([
     { path: "/", element: <Home /> },
+
     {
       path: "about",
       element: <About />,
@@ -30,25 +38,36 @@ function App() {
         }
       ]
     },
+
     { path: "events", element: <Events /> },
     { path: "products", element: <Products /> },
     { path: "contact", element: <Contact /> },
+
+    /**
+     * 萬用字元路徑 (Wildcard Path)：捕捉 404
+     */
     { path: "*", element: <Whoops404 /> },
+
+    /**
+     * 重新導向實作：
+     * 注意：在 v6 中，原本的 Redirect 已經改為使用 <Navigate /> 組件。
+     */
     {
       path: "services",
-      redirectTo: "about/services"
+      element: <Navigate to="/about/services" />
     }
   ]);
+
   return element;
 }
 
 export default App;
 
+// 以下是原本被註解掉的程式碼 (保留作為參考)
 // import React from "react";
 // import {
 //   Routes,
-//   Route,
-//   Redirect
+//   Route
 // } from "react-router-dom";
 // import {
 //   Home,
@@ -94,14 +113,13 @@ export default App;
 //           path="contact"
 //           element={<Contact />}
 //         />
-//         <Redirect
+//         {/* 原本的 Redirect 寫法 */}
+//         {/* <Redirect
 //           from="services"
 //           to="about/services"
-//         />
+//         /> */}
 //         <Route path="*" element={<Whoops404 />} />
 //       </Routes>
 //     </div>
 //   );
 // }
-
-// export default App;
