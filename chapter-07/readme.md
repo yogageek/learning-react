@@ -24,15 +24,21 @@
 - Custom: `useWindowSize` - ([run it](https://codesandbox.io/s/learning-react-uselayouteffect-2-vuir1?file=/src/App.js))
 - Custom: `useMousePosition` - ([run it](https://codesandbox.io/s/learning-react-uselayouteffect-3-6ks6x?file=/src/App.js))
 
-### useReducer
+### useReducer 
 
 - Checkbox with `useState` - ([run it](https://codesandbox.io/s/learning-react-usereducer-1-ef229?file=/src/App.js))
 - Checkbox with `toggle` - ([run it](https://codesandbox.io/s/learning-react-usereducer-2-oqy23?file=/src/App.js))
 - Checkbox with `useReducer` - ([run it](https://codesandbox.io/s/learning-react-usereducer-3-mht63?file=/src/App.js))
 - Increment number with `useReducer` - ([run it](https://codesandbox.io/s/learning-react-usereducer-4-b1yxs?file=/src/App.js))
 
-### useReducer to handle Complex State
+### useReducer to handle Complex State 
 
 - `useState` with objects - ([run it](https://codesandbox.io/s/learning-react-usereducer-complex-1-k7ibz?file=/src/App.js))
 - `useReducer` with objects - ([run it](https://codesandbox.io/s/learning-react-usereducer-complex-2-ewue8?file=/src/App.js))
 - legacy `setState` with `useReducer` - ([run it](https://codesandbox.io/s/learning-react-usereducer-complex-3-2wldd?file=/src/App.js))
+
+
+useReducer 的本質是把 state 變更邏輯集中成一個純函式——給定舊 state 和 action，永遠回傳新 state。可預測、可測試、跟 UI 解耦。這也是 Redux 的核心思想，useReducer 是它的 React 內建簡化版。
+
+all done, 剩下看書然後補上書中案例如果有的話。
+發現告訴自己限定時間要完成(然後就要去做別的事，想趕快了結)這種催眠法很有效。不然會每個檔案都看超久無法專注然後時間過去了也不知道自己看了啥
