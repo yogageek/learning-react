@@ -10,16 +10,16 @@
   <h1>Recursion</h1>
   <p>Open the Console</p>
 <script type="text/babel">
-
-    const countdown = (value, fn, delay=1000) => {
-        fn(value)
-        return (value > 0) ?
-            setTimeout(() => countdown(value-1, fn), delay) :
-            value
+    // 教學重點：遞迴 + setTimeout，每秒印一次（非同步倒數）
+    const countdown = (value, fn, delay=1000) => { // 定義倒數：value 數字、fn 回呼、delay 預設 1000ms
+        fn(value) // 立刻用目前 value 呼叫 fn（第一下會馬上印）
+        return (value > 0) ? // value 還大於 0 就排程下一輪，否則結束
+            setTimeout(() => countdown(value-1, fn), delay) : // delay 毫秒後再遞迴 value-1（非同步，每秒印一次）
+            value // value === 0 時停止遞迴，回傳 0
     }
 
-    const log = value => console.log(value)
-    countdown(10, log)
+    const log = value => console.log(value) // 把印 log 包成函式，當 fn 傳入
+    countdown(10, log) // 從 10 開始；Console 約每秒印 10→9→…→0
 
 </script>
 </body>

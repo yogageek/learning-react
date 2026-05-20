@@ -10,44 +10,117 @@
   <h1>Composition</h1>
   <p>Open the Console</p>
 <script type="text/babel">
+    // =============================================================================
+    // 構思筆記：oneFunction 不是先想巢狀，而是「終點 → 拆步 → 接成管線」
+    // =============================================================================
+    // 【1】先定輸出：{ ampm, hours }，問「從 new Date() 怎麼變成這個物件？」
+    //     對照 01-composition.html：已知模板 "hh:mm:ss tt"，再決定 replace 哪些片段
+    // 【2】列轉換站：包裝 Date → 加 ampm → 轉 12 小時 → 刪 date（每步吃物件、吐物件）
+    // 【3】先寫直的大函式，再拆成小函式；巢狀 = 把 step1~4 收成一條式
+    // 【4】與 01 的 .replace 鏈同模型：字串--replace-->字串；這裡是物件--f-->物件--f-->...
+    // 【5】由內往外寫：最內層最先執行；寫反會型別對不上
+    // 【6】值得拆步：重用、單測、插新步；巢狀太深 → 03 用 compose
+    // 本章：01 字串 | 02 巢狀物件 | 03 compose | 04/05 React 時鐘
+    // =============================================================================
 
+    // 教學重點：手動巢狀呼叫多個小函式，把 Date 組合成時鐘物件
     const createClockTime = date => ({date})
+    // 站 1／包裝：Date → { date }，統一後續管線的輸入格式
+    // 箭頭函式 + 小括號 ({date})：回傳「物件字面」，不是程式區塊
 
     const appendAMPM = ({date}) =>
+    // 站 2：參數解構 {date}，在物件上疊加 ampm（仍保留 date 供下一步讀小時）
         ({
             date,
             ampm: (date.getHours() >= 12) ? "PM" : "AM"
+            // 三元運算子：12 點起算 PM（含正午）
         })
 
     const civilianHours = clockTime => {
+    // 站 3：從 clockTime.date 算 12 小時制，spread 保留 ampm 等欄位
       const hours = clockTime.date.getHours()
       return {
         ...clockTime,
+        // 展開運算子：淺拷貝舊物件，再疊加 hours 欄位
         hours: (hours > 12) ?
           hours - 12 :
           hours
+        // 24 小時制轉 12 小時制：僅當 hours > 12 才減 12
       }
     }
 
     const removeDate = clockTime => {
+    // 站 4／清理：拷貝後 delete date，輸出只留 UI 需要的欄位
       let newTime = {...clockTime}
       delete newTime.date
       return newTime
     }
 
     // Not the best way to compose all of these into one function
+    // 函式愈多巢狀愈深；03-composition.html 會用 compose 改寫
 
     const oneFunction = date =>
-        removeDate(
+        removeDate(              // 最外層最後執行
             civilianHours(
                 appendAMPM(
-                    createClockTime(date)
+                    createClockTime(date)  // 最內層最先執行
                 )
             )
         )
+    // 等價於 step1=createClockTime(date) → step2=appendAMPM(s1) → step3 → step4
 
     console.log(oneFunction(new Date()))
+    // 在 Console 可逐步印 s1~s4，看物件如何長大、最後 date 被拿掉
+
+
+// =============================================================================
+// 構思筆記：oneFunction 不是先想巢狀，而是「終點 → 拆步 → 接成管線」
+// =============================================================================
+//
+// 【第一步】先定輸出，不是先寫函式
+//   目標：{ ampm, hours } 這類「時鐘用資料」，不是 Date 本身
+//   問法：從 new Date() 怎麼一步步變成這個物件？
+//   對照 01-composition.html：已知模板 "hh:mm:ss tt"，再決定 replace 哪些片段
+//
+// 【第二步】用中文列「轉換站」（食譜步驟）
+//   1. 拿到 Date
+//   2. 判斷 AM/PM → ampm
+//   3. 24 小時 → 12 小時制 → hours
+//   4. 不再往下傳 Date → 刪 date
+//   設計原則：每一步「吃物件、吐物件」，型態一致才能接管子
+//
+// 【第三步】先寫直的，再拆、再疊（巢狀是最後才收斂的寫法）
+//   直覺版：一個大函式裡算 ampm、hours、return { ampm, hours }
+//   重構：每步抽成小函式 → 用 step1~step4 中間變數接起來
+//   巢狀版：把 step1~4 收成 removeDate(civilianHours(appendAMPM(createClockTime(date))))
+//
+// 【第四步】和 01 的 .replace 鏈同一模型
+//   字串 --replace--> 字串 --replace--> 字串
+//   物件 --f1--> {date} --f2--> {date,ampm} --f3--> {...,hours} --f4--> {ampm,hours}
+//
+// 【第五步】為什麼由內往外寫？
+//   最內層最先執行：先有 date → createClockTime → appendAMPM → civilianHours → removeDate
+//   寫反（例如先 removeDate）會型別對不上：removeDate 需要已有 date 的物件
+//
+// 【第六步】何時值得這樣設計？
+//   - 某步要在多處重用（appendAMPM）
+//   - 要單獨測試（只測 24→12）
+//   - 要插新步（例如 appendMinutes）
+//   巢狀太深時 → 03-composition.html 用 compose(...fns) 改寫
+//
+// 【實作 checklist】
+//   1. 終點物件長什麼樣？
+//   2. 原料到終點有幾站？（中文列 3~5 步）
+//   3. 每站輸入/輸出是否同一種形狀？
+//   4. 先寫 step1~step4，Console 確認
+//   5. 再收成 oneFunction 巢狀
+//   6. 函式變多 → compose
+//
+// 【與 React】小步轉換 + 組合，避免巨型函式；04/05 時鐘把管線接到 UI
+// =============================================================================
 
 </script>
 </body>
 </html>
+
+

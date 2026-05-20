@@ -10,12 +10,17 @@
   <h1>Recursion</h1>
   <p>Open the Console</p>
 <script type="text/babel">
-
+    // 教學重點：遞迴 countdown——同步遞減並每次呼叫 callback
+    // 執行順序：每層先 fn(value) 印數字，value > 0 再 countdown(value-1, fn)
+    // countdown(10, ...) → Console 印 10,9,8,7,6,5,4,3,2,1,0（共 11 行）
     const countdown = (value, fn) => {
-        fn(value)
+        // value：目前數字；fn：每次要執行的 callback
+        fn(value)  // 先用「現在的 value」呼叫 fn → 這裡會 console.log 該數字
+        // value > 0：再遞迴 value-1；value === 0：停止，回傳 0
         return (value > 0) ? countdown(value-1, fn) : value
     }
 
+    // 傳入 value=10、fn=(value)=>console.log(value)；這行只啟動遞迴，本身不印
     countdown(10, value => console.log(value))
 
 </script>

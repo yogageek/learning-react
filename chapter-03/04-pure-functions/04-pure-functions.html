@@ -12,6 +12,7 @@
   <body>
     <h1>Pure Functions</h1>
     <script type="text/babel">
+      // 教學重點：副作用（side effect）——函式直接操作 DOM，不只回傳值
       function Header(text) {
         let h1 = document.createElement("h1");
         h1.innerText = text;

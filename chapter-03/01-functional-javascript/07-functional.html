@@ -13,7 +13,9 @@
     <h1>Functional JavaScript</h1>
     <p>Open the console</p>
     <script type="text/babel">
-      const createScream = logger => message =>
+      // 教學重點：用 ES6 箭頭函式把「回傳函式」寫得更短
+      // //createScream 是高階函式：吃進一個 logger，回傳新函式 scream；之後只要 scream("訊息")，就會把訊息轉大寫加 !!! 再交給當初的 logger 印出。重點是函式可以當回傳值，先設定好行為（createScream + console.log），之後重複呼叫 scream 即可。
+      const createScream = logger => message => //就是上一個範例直接簡化改寫成雙箭頭
         logger(message.toUpperCase() + "!!!");
 
       const scream = createScream(message =>

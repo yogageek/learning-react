@@ -13,12 +13,15 @@
     <h1>Functional JavaScript</h1>
     <p>Open the console</p>
     <script type="text/babel">
-      const insideFn = logger =>
+      // 教學重點：函式可以當參數傳給另一個函式（高階函式的基礎）
+      //insideFn 做的事：「我收到一個函式，幫你呼叫它，並塞一句固定文字。」
+      const insideFn = logger => //參數名叫 logger，預期它本身也是函式
         logger(
           "They can be sent to other functions as arguments"
-        );
+        );//呼叫傳進來的那個函式，並把這句字串當參數
 
       insideFn(message => console.log(message));
+      //把「印 log 的函式」當參數傳給 insideFn；insideFn 再呼叫它並傳入那句英文。
     </script>
   </body>
 </html>

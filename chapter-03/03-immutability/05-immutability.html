@@ -13,13 +13,14 @@
     <h1>Immutability</h1>
     <p>Open the console</p>
     <script type="text/babel">
+      // 教學重點：用 concat 回傳新陣列，不突變原本的 list
       let list = [
         { title: "Rad Red" },
         { title: "Lawn" },
         { title: "Party Pink" }
       ];
 
-      const addColor = (title, array) =>
+      const addColor = (title, array) =>//array.concat({ title }) 回傳新陣列，不突變原本的 list
         array.concat({ title });
 
       //

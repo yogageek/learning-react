@@ -10,7 +10,9 @@
   <h1>Higher Order Functions</h1>
   <p>Open the Console</p>
 <script type="text/babel">
-
+    // 教學重點：userLogs 回傳專用 log 函式；搭配 API 請求示範實務用法
+    // 高階函式 userLogs（雙箭頭）
+    // userLogs 寫成 userName => message => console.log(...)，代表函式回傳函式：第一次呼叫 userLogs("grandpa23") 先固定使用者名，得到專用的 log；之後只要 log("訊息") 就會印出 grandpa23 -> 訊息，不必每次重複帶 userName。這種寫法叫柯里化，是高階函式的常見用法——把「共用設定」先綁好，留下「每次不同的部分」給後面的呼叫（例如 API 成功／失敗時各 log 一行）。等同 function(userName) { return function(message) { ... } }，只是用箭頭寫得比較短。
     const getFakeMembers = count => new Promise((resolves, rejects) => {
       const api = `https://api.randomuser.me/?nat=US&results=${count}`
       const request = new XMLHttpRequest()

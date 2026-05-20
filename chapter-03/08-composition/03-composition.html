@@ -10,7 +10,8 @@
   <h1>Composition</h1>
   <p>Open the Console</p>
 <script type="text/babel">
-
+    // 教學重點：自訂 compose，用 reduce 把多個函式合成 oneFunction（語意同 02 巢狀版）
+    // compose 解決：宣告順序 = 執行順序，避免巢狀難讀、順序寫反
     const createClockTime = date => ({date})
 
     const appendAMPM = ({date}) =>
@@ -41,17 +42,24 @@
       (arg) =>
       fns.reduce(
         (composed, f) => f(composed),
+        // ...fns 收集多個函式；reduce 從 arg 開始，依序把上一步結果傳給下一個 f
         arg
     )
 
     const oneFunction = compose(
-      createClockTime,
-      appendAMPM,
-      civilianHours,
-      removeDate
+      createClockTime,   // 站 1
+      appendAMPM,        // 站 2
+      civilianHours,     // 站 3
+      removeDate         // 站 4
     )
+    // oneFunction(date) 等同 02：removeDate(civilianHours(appendAMPM(createClockTime(date))))
 
     console.log(oneFunction(new Date()))
+
+    // compose 解決的是「宣告順序 = 執行順序」，避免巢狀難讀、順序寫反
+    // reduce：composed 從 arg 開始，依序 f(composed)
+    // compose(createClockTime, appendAMPM, civilianHours, removeDate)(date)
+    // 與 02 巢狀 oneFunction(date) 語意相同
 
 </script>
 </body>

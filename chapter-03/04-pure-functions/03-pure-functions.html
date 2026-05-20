@@ -13,13 +13,14 @@
     <h1>Pure Functions</h1>
     <p>Open the console</p>
     <script type="text/babel">
+      // 教學重點：純函式——依參數回傳新物件，不修改原本的 frederick
       var frederick = {
         name: "Frederick Douglass",
         canRead: false,
         canWrite: false
       };
 
-      const selfEducate = person => ({
+      const selfEducate = person => ({//依參數回傳新物件，不修改原本的 frederick
         ...person,
         canRead: true,
         canWrite: true

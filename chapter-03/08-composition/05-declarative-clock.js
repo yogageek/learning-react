@@ -1,3 +1,4 @@
+// 教學重點：宣告式時鐘——拆成小函式，用 compose 組成每秒 log 時間的 pipeline
 const oneSecond = () => 1000
 const getCurrentTime = () => new Date()
 const clear = () => console.clear()

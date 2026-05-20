@@ -10,31 +10,80 @@
   <h1>Recursion</h1>
   <p>Open the Console</p>
 <script type="text/babel">
-
-    const dan = {
-        type: "person",
-        data: {
-          gender: "male",
-          info: {
-            id: 22,
-            fullname: {
-              first: "Dan",
-              last: "Deacon"
+    const dan = { // 範例：多層巢狀物件，用來示範依路徑取值
+        type: "person", // 頂層欄位
+        data: { // 第二層
+          gender: "male", // data 底下的欄位
+          info: { // 第三層
+            id: 22, // info.id
+            fullname: { // 第四層
+              first: "Dan", // 深層字串，後面 deepPick 會取到這個
+              last: "Deacon" // fullname.last
             }
           }
         }
       }
 
-    const deepPick = (fields, object={}) => {
-       const [first, ...remaining] = fields.split(".")
-       return (remaining.length) ?
-           deepPick(remaining.join("."), object[first]) :
-           object[first]
+    const deepPick = (fields, object={}) => { // fields 如 "a.b.c"；object 預設空物件
+       const [first, ...remaining] = fields.split(".") // 路徑拆成第一段 first、其餘 remaining
+       return (remaining.length) ? // 還有下一段路徑就繼續遞迴
+           deepPick(remaining.join("."), object[first]) : // 往內鑽一層，剩餘路徑用 "." 接回字串
+           object[first] // 最後一段：回傳該層屬性值（結束條件）
     }
 
-    console.log( deepPick("type", dan) )
-    console.log( deepPick("data.info.fullname.first", dan) )
+    console.log( deepPick("type", dan) ) // 印 "person"（只取一層）
+    console.log( deepPick("data.info.fullname.first", dan) ) // 印 "Dan"（多層路徑一路鑽到底）
+
+    // 教學重點：遞迴處理「巢狀結構」——用 "a.b.c" 字串描述路徑，每層取 object[first] 再往內；
+    // 與 countdown 相同模式：有剩餘路徑就再呼叫自己，沒有就回傳最終值。實務上類似 lodash.get。
 
 </script>
 </body>
 </html>
+
+<!-- 
+範例 1：deepPick("type", dan)
+fields = "type"
+
+
+fields.split(".")  // → ["type"]
+const [first, ...remaining] = ["type"]
+// first     = "type"
+// remaining = []   （沒有「其餘」）
+remaining.length 是 0 → 不再遞迴，直接 object["type"] → "person"。
+
+範例 2：deepPick("data.info.fullname.first", dan)（會遞迴 4 次）
+第 1 次 — fields = "data.info.fullname.first"，object = dan
+
+變數	值
+split 結果
+["data", "info", "fullname", "first"]
+first
+"data"
+remaining
+["info", "fullname", "first"]
+→ remaining.join(".") = "info.fullname.first"，下一層 object[first] = dan.data
+
+第 2 次 — fields = "info.fullname.first"，object = dan.data
+
+first	remaining
+"info"
+["fullname", "first"]
+→ 鑽到 dan.data.info
+
+第 3 次 — fields = "fullname.first"，object = dan.data.info
+
+first	remaining
+"fullname"
+["first"]
+→ 鑽到 dan.data.info.fullname
+
+第 4 次 — fields = "first"，object = dan.data.info.fullname
+
+first	remaining
+"first"
+[]
+→ 不再遞迴，object["first"] → "Dan"
+
+一句記
+"a.b.c".split(".") → first 永遠是左邊第一段，remaining 是右邊剩下的陣列；有剩餘就 join(".") 再遞迴，沒有就取 object[first]。 -->

@@ -13,6 +13,8 @@
     <h1>Immutability</h1>
     <p>Open the console</p>
     <script type="text/babel">
+      // 教學重點：用 Object.assign 複製物件後再改，不動原本的 color_lawn
+      // 口訣： ... spread、Object.assign({}, ...)、map/filter/concat 產生新陣列／物件 → 通常是不突變更新。
       let color_lawn = {
         title: "lawn",
         color: "#00FF00",

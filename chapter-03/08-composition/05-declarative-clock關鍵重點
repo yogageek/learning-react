@@ -1,0 +1,151 @@
+# `05-declarative-clock.js` 關鍵重點
+
+這支檔案是 **04 命令式時鐘的宣告式版本**：同樣每秒在 Console 顯示時間，但改成 **小函式 + `compose` 管線**，把 01～03 學過的東西全部串起來。
+
+---
+
+## 1. 和 `04-imperative-clock.js` 的對照（本章 climax）
+
+| | **04 命令式** | **05 宣告式** |
+|---|----------------|----------------|
+| 結構 | 一個 `getClockTime()` 包到底 | 多個單職責函式 |
+| 改資料 | `if` 直接改 `time` 物件 | 多半 `return { ...clockTime, ... }` |
+| 組合 | 巢狀邏輯、字串 `+` | `compose` 管線 |
+| 字串格式 | 手動拼接 | `formatClock` + `replace`（呼應 **01**） |
+
+重點不是「另一種時鐘」，而是 **同一需求，用宣告式思維重寫**。
+
+---
+
+## 2. 整條管線：`startTicking` 裡的大 `compose`
+
+```65:77:chapter-03/08-composition/05-declarative-clock.js
+const startTicking = () =>
+    setInterval(
+        compose(
+            clear,
+            getCurrentTime,
+            abstractClockTime,
+            convertToCivilianTime,
+            doubleDigits,
+            formatClock("hh:mm:ss tt"),
+            display(log)
+        ),
+        oneSecond()
+    )
+```
+
+每秒實際資料流（`setInterval` **不傳參數**，起點是 `undefined`）：
+
+```
+undefined → clear() → new Date() → {h,m,s} → 12h+ampm → 補零 → "03:05:09 PM" → log(...)
+```
+
+| 步驟 | 函式 | 做什麼 |
+|------|------|--------|
+| 1 | `clear` | 清 Console（忽略輸入） |
+| 2 | `getCurrentTime` | 取得 `new Date()` |
+| 3 | `abstractClockTime` | `Date` → `{ hours, minutes, seconds }` |
+| 4 | `convertToCivilianTime` | 12 小時 + AM/PM（內層再 `compose`） |
+| 5 | `doubleDigits` | 時分秒補零（內層再 `compose`） |
+| 6 | `formatClock("hh:mm:ss tt")` | 模板 replace 成字串（**01**） |
+| 7 | `display(log)` | 把字串交給 `console.log` |
+
+**關鍵技巧**：管線從 `undefined` 開始沒問題，因為 `clear` / `getCurrentTime` 不依賴上一個「有意義」的值。
+
+---
+
+## 3. 兩段「子管線」（巢狀 `compose`）
+
+### `convertToCivilianTime`（順序很重要）
+
+```52:56:chapter-03/08-composition/05-declarative-clock.js
+const convertToCivilianTime = clockTime =>
+    compose(
+        appendAMPM,
+        civilianHours
+    )(clockTime)
+```
+
+執行順序：**先 `appendAMPM`，再 `civilianHours`**。
+
+- `appendAMPM` 用 **24 小時制的 `hours`** 判斷 PM（例如 15 點 → PM）。
+- 之後 `civilianHours` 才把 `hours` 變成 3。
+
+若順序反過來（先減 12 再判 AM/PM），下午會變成錯的 AM。這和 **02** 的步驟類似，但這裡用 `compose` 順序表達依賴。
+
+### `doubleDigits`
+
+```58:63:chapter-03/08-composition/05-declarative-clock.js
+const doubleDigits = civilianTime =>
+    compose(
+        prependZero("hours"),
+        prependZero("minutes"),
+        prependZero("seconds")
+    )(civilianTime)
+```
+
+對應 **04** 裡三段 `if (< 10)`，改成可重用的 **`prependZero(key)`**（高階函式：回傳一個「處理 clockTime 的函式」）。
+
+---
+
+## 4. 高階函式與柯里化（進階語法重點）
+
+```28:35:chapter-03/08-composition/05-declarative-clock.js
+const display = target => time => target(time)
+
+const formatClock = format =>
+    time =>
+        format.replace("hh", time.hours)
+```
+
+- **`display(log)`**：`log` 當「輸出目標」，得到 `time => console.log(time)`，把副作用留在管線最後。
+- **`formatClock("hh:mm:ss tt")`**：先給模板，再得到 `time => 字串`，和 **01** 的 `.replace` 鏈同一概念。
+
+這兩個都是 **函式回傳函式**，讓 `compose` 每一步型態一致：`某東西 → 某東西`。
+
+---
+
+## 5. `compose` 本身（呼應 **03**）
+
+```45:50:chapter-03/08-composition/05-declarative-clock.js
+const compose = (...fns) =>
+    (arg) =>
+        fns.reduce(
+            (composed, f) => f(composed),
+            arg
+        )
+```
+
+- 宣告順序 = 執行順序（比 **02** 巢狀好讀）。
+- 本章 **三層** 用法：單次 `oneFunction`（03）、子管線（`convertToCivilianTime` / `doubleDigits`）、每秒大管線（`startTicking`）。
+
+---
+
+## 6. 小工具函式（讓管線可讀）
+
+```2:5:chapter-03/08-composition/05-declarative-clock.js
+const oneSecond = () => 1000
+const getCurrentTime = () => new Date()
+const clear = () => console.clear()
+const log = message => console.log(message)
+```
+
+沒有複雜邏輯，只是把 **意圖寫成名字**，讓 `compose(...)` 讀起來像句子：清畫面 → 取現在時間 → … → 顯示。
+
+---
+
+## 7. 一句話總結
+
+> **用 `compose` 把「清 Console → 取時間 → 轉物件 → 12 小時制 → 補零 → 套模板 → log」串成每秒執行的管線；用高階函式讓每一步可重用、可測，並和 04 的命令式大函式對照。**
+
+---
+
+## 8. 建議怎麼讀這支檔
+
+1. 先跑 `05-declarative-clock.html` 看 Console。
+2. 對照 `04`，找同一規則在哪個小函式。
+3. 在 Console 手動拆：`getCurrentTime()` → `abstractClockTime(...)` → … 看每一步輸出。
+4. 特別留意 `convertToCivilianTime` 的 **appendAMPM → civilianHours** 順序。
+
+若要像 02/04 一樣把這些寫進檔內註解，切 Agent 模式說「OK」即可。

@@ -13,13 +13,14 @@
     <h1>Pure Functions</h1>
     <p>Open the console</p>
     <script type="text/babel">
+      // 教學重點：有參數有回傳，但仍突變傳入物件，所以仍是不純函式
       var frederick = {
         name: "Frederick Douglass",
         canRead: false,
         canWrite: false
       };
 
-      const selfEducate = person => {
+      const selfEducate = person => {//突變傳入物件，所以仍是不純函式
         person.canRead = true;
         person.canWrite = true;
         return person;

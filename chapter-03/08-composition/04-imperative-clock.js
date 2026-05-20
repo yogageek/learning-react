@@ -1,3 +1,4 @@
+// 教學重點：命令式時鐘——setInterval + 單一大函式 getClockTime 處理全部邏輯
 // Log Clock Time every Second
 setInterval(logClockTime, 1000);
 

@@ -13,6 +13,7 @@
     <h1>Immutability</h1>
     <p>Open the console</p>
     <script type="text/babel">
+      // 教學重點：用陣列 spread [...list, item] 新增項目且不動原陣列
       let list = [
         { title: "Rad Red" },
         { title: "Lawn" },
@@ -21,7 +22,7 @@
 
       const addColor = (title, list) => [
         ...list,
-        { title }
+        { title }// 新增一筆 { title } 物件到 list 陣列
       ];
 
       //

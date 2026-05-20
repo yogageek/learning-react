@@ -13,6 +13,7 @@
     <h1>Functional JavaScript</h1>
     <p>Open the console</p>
     <script type="text/babel">
+      // 教學重點：函式可以放進陣列，當一般元素呼叫
       const messages = [
         "They can be inserted into arrays",
         message => console.log(message),
@@ -20,7 +21,7 @@
         message => console.log(message)
       ];
 
-      messages[1](messages[0]);
+      messages[1](messages[0]);//取出索引 1 的函式，把索引 0 的字串當參數傳進去 → 印出第一句
       messages[3](messages[2]);
     </script>
   </body>

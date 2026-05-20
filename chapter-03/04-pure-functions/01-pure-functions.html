@@ -13,6 +13,11 @@
     <h1>Pure Functions</h1>
     <p>Open the console</p>
     <script type="text/babel">
+      // 教學重點：不純函式——無參數、無回傳，直接改外面的 frederick
+      // 不純 = 藏副作用；純 = 輸入進、新值出，好除錯、好配合 React 的 immutable state。
+      // selfEducate() 不純，代表：
+      // 呼叫順序會影響結果 — 先叫不叫、叫幾次，frederick 都不一樣；很難猜現在狀態。
+      // 很難測、很難重現 — 函式依賴外面的 frederick，單測要先把全域資料設好。
       var frederick = {
         name: "Frederick Douglass",
         canRead: false,

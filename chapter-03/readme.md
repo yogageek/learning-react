@@ -1,5 +1,7 @@
 # Chapter 3 : Functional Programming with JavaScript
 
+<!-- 教學重點：本章目錄與各範例索引；說明函式程式設計概念如何支撐 React 的寫法。 -->
+
 Many techniques in React follow the functional JavaScript paradigm. Understanding the basic concepts of functional programming will make you better at structuring React applications.
 
 ## Samples
