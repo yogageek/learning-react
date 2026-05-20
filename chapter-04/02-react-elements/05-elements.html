@@ -14,6 +14,8 @@
 <script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
 
 <script>
+    // 重點：與 04 相同，但在 map 裡為每個 li 加上 key: i
+    // - React 在列表更新時需要穩定識別子節點（索引當 key 僅作教學示範）
 
     const items = [
         "1 lb Salmon",

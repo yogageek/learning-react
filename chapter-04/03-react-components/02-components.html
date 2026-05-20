@@ -14,6 +14,9 @@
 <script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
 
 <script>
+    // 重點：class 元件 extends React.Component
+    // - 透過 this.props.items 從外部傳入材料陣列，元件內再 map 成 li（含 key）
+    // - React.createElement(IngredientsList, { items }, null) 示範 props 傳遞
 
     class IngredientsList extends React.Component {
         render() {

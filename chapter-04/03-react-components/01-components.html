@@ -13,6 +13,11 @@
     <script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
 
     <script>
+      // 重點：用函式定義元件 IngredientsList，render 時回傳 createElement 樹
+      // - React.createElement(IngredientsList, null, null) 當成「自訂標籤」渲染
+      // - 把重複的 ul/li 封裝成可重用單元（內容寫死在元件裡）
+      // 注意：此檔 getElementById("root") 與 HTML 的 #react-container 不一致，需改 id 才會顯示
+
       function IngredientsList() {
         return React.createElement(
           "ul",

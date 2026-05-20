@@ -14,6 +14,9 @@
 <script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
 
 <script>
+    // 重點：React.createElement(type, props, children) 最基本用法
+    // - 建立 h1 元素並用 ReactDOM.render 掛到容器
+    // - console.log 可觀察元素是物件（虛擬 DOM 描述），不是真實 DOM 節點
 
     const dish = React.createElement("h1", null, "Baked Salmon")
 

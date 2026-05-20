@@ -14,6 +14,9 @@
 <script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
 
 <script>
+    // 重點：巢狀 createElement，一個 section 包住標題、材料、步驟
+    // - HTML 的 class 在 React 裡寫成 className
+    // - 把 02-baked-salmon.html 的結構用元素樹重現（仍無元件、無陣列 map）
 
     const dish = React.createElement("section", {id: "baked-salmon"},
         React.createElement("h1", null, "Baked Salmon"),
